@@ -28,12 +28,16 @@ from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 from activity_monitor import handle_command , bot_command
 import datetime
-
+from dotenv import load_dotenv
 
 API_KEY = "22065cd45848ad155db7e0b4"
 BASE_URL = "https://v6.exchangerate-api.com/v6"
 # Define log file first before using it
 LOG_FILE = 'bot_logs.log'
+
+load_dotenv()
+
+discord_token = os.getenv("DISCORD_TOKEN")
 
 TARGET_CHANNEL_ID = 1138060679803318292
 
@@ -1613,6 +1617,11 @@ async def debug_logger():
 # Main bot runner
 async def main():
     """Main asynchronous entry point for the bot."""
+    
+    # Check if token is available
+    if not discord_token:
+        raise ValueError("Discord token is missing in .env file.")  # Raise error if token is missing
+    
     async with bot:
         start_message = "Starting bot..."
         logging.info(start_message)
@@ -1622,7 +1631,8 @@ async def main():
         bot.loop.create_task(debug_logger())  # Start debug logger task
 
         try:
-            await bot.start('MTMxNDg2MzI5MDM3OTI3MjI2OQ.G4R7xi.20DH-MPhqzK0IPxTOF8ArVMN3k00Suc9e--IVo')
+            # Start the bot with the token from the .env file
+            await bot.start(discord_token)
         except discord.LoginFailure:
             critical_message = "Invalid token provided. Please check your bot token."
             logging.critical(critical_message)
@@ -1631,26 +1641,23 @@ async def main():
             http_error_message = f"HTTP error occurred: {e}"
             logging.critical(http_error_message)
             print(http_error_message)  # Send to terminal
+        except ValueError as e:
+            # Handle missing token
+            logging.error(f"Error: {e}")
+            print(f"Error: {e}")
         except Exception as e:
             unexpected_error_message = f"Unexpected error: {e}"
             logging.error(unexpected_error_message)
             print(unexpected_error_message)  # Send to terminal
-            restart_bot()  # Restart the bot on failure
+            await restart_bot()  # Restart the bot on failure
 
-# Restart logic (optional)
-def restart_bot():
-    """Restart the bot with a delay."""
-    restart_message = "Restarting bot in 10 seconds..."
-    logging.info(restart_message)
-    print(restart_message)  # Send to terminal
-    time.sleep(10)
-    asyncio.run(main())
-
-# Entry point
+# Entry point for running the bot
 if __name__ == "__main__":
     try:
-        asyncio.run(main())
+        asyncio.run(main())  # Start the bot asynchronously
     except KeyboardInterrupt:
-        termination_message = "Bot terminated by user."
-        logging.info(termination_message)
-        print(termination_message)  # Send to terminal
+        print("Bot terminated by user.")
+        logger.info("Bot terminated by user.")
+    except Exception as e:
+        print(f"Critical failure: {e}")
+        logger.critical(f"Critical failure: {e}")

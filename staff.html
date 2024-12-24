@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Minecraft Staff Application</title>
+    <!-- Font Awesome CDN -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+    <!-- Basic CSS Styles -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+        }
+
+        header {
+            background-color: #2d3e50;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        header i {
+            margin-right: 10px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            font-size: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            font-size: 18px;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: #2d3e50;
+            outline: none;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        .form-group .icon {
+            margin-right: 10px;
+        }
+
+        .submit-btn {
+            background-color: #2d3e50;
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+        }
+
+        .submit-btn:hover {
+            background-color: #1f2a35;
+        }
+
+        footer {
+            background-color: #2d3e50;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+                margin: 30px 15px;
+            }
+
+            header {
+                font-size: 20px;
+            }
+
+            .submit-btn {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <i class="fas fa-users"></i> Minecraft Staff Application
+    </header>
+
+    <div class="container">
+        <h2><i class="fas fa-pencil-alt"></i> Application Form</h2>
+
+        <!-- Update form action to the backend server's endpoint -->
+        <form action="http://localhost:5000/submit_application" method="POST">
+            <!-- Name Field -->
+            <div class="form-group">
+                <label for="name"><i class="fas fa-user icon"></i> Full Name</label>
+                <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+            </div>
+
+            <!-- Age Field -->
+            <div class="form-group">
+                <label for="age"><i class="fas fa-birthday-cake icon"></i> Age</label>
+                <input type="number" id="age" name="age" placeholder="Enter your age" required>
+            </div>
+
+            <!-- Minecraft Username -->
+            <div class="form-group">
+                <label for="minecraft_username"><i class="fab fa-minecraft icon"></i> Minecraft Username</label>
+                <input type="text" id="minecraft_username" name="minecraft_username" placeholder="Your Minecraft username" required>
+            </div>
+
+            <!-- Experience -->
+            <div class="form-group">
+                <label for="experience"><i class="fas fa-cogs icon"></i> Why do you want to be a staff member?</label>
+                <textarea id="experience" name="experience" placeholder="Tell us about your experience" required></textarea>
+            </div>
+
+            <!-- Availability -->
+            <div class="form-group">
+                <label for="availability"><i class="fas fa-calendar-check icon"></i> Availability (hours/week)</label>
+                <input type="number" id="availability" name="availability" placeholder="How many hours can you dedicate per week?" required>
+            </div>
+
+            <!-- Position Field -->
+            <div class="form-group">
+                <label for="position"><i class="fas fa-user-tie icon"></i> Desired Position</label>
+                <select id="position" name="position" required>
+                    <option value="mod">Moderator</option>
+                    <option value="admin">Admin</option>
+                    <option value="helper">Helper</option>
+                    <option value="builder">Builder</option>
+                </select>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="form-group">
+                <button type="submit" class="submit-btn"><i class="fas fa-paper-plane"></i> Submit Application</button>
+            </div>
+        </form>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Minecraft Server - All Rights Reserved</p>
+    </footer>
+
+</body>
+
+</html>

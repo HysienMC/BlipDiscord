@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bot Status | KabayanX</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 3.5rem;
+            color: #fff;
+            margin-bottom: 30px;
+            font-weight: 600;
+            text-align: center;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            border-radius: 0 0 20px 20px;
+        }
+
+        .navbar .logo {
+            font-size: 2rem;
+            color: #fff;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .navbar .menu {
+            display: flex;
+            gap: 20px;
+        }
+
+        .navbar .menu a {
+            text-decoration: none;
+            color: #fff;
+            font-size: 1.1rem;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .navbar .menu a:hover {
+            background-color: #2575fc;
+            color: #fff;
+        }
+
+        .menu-icon {
+            display: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #fff;
+        }
+
+        /* Main Content Container */
+        .main-content {
+            margin-top: 120px;
+            width: 100%;
+            max-width: 900px;
+            text-align: center;
+        }
+
+        /* Status Container */
+        .status-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px 35px;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            margin-bottom: 40px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .status-container:hover {
+            transform: scale(1.05);
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.2);
+        }
+
+        .status-container .status-icon {
+            font-size: 120px;
+            margin-bottom: 20px;
+            animation: pulse 1.5s infinite;
+        }
+
+        .status-container .status-icon.online {
+            color: #4CAF50;
+        }
+
+        .status-container .status-icon.offline {
+            color: #e74c3c;
+        }
+
+        .status-container .status-text {
+            font-size: 2.5rem;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .status-container .status-text.online {
+            color: #4CAF50;
+        }
+
+        .status-container .status-text.offline {
+            color: #e74c3c;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Metrics Section */
+        .metrics-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px 35px;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            margin-bottom: 40px;
+        }
+
+        #metricsChart {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* About Section */
+        .about-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px 35px;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            text-align: left;
+        }
+
+        .about-container h3 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        .about-container p, .about-container ul {
+            font-size: 1.1rem;
+            color: #ddd;
+            line-height: 1.6;
+        }
+
+        .about-container ul {
+            list-style: none;
+            margin-top: 20px;
+        }
+
+        .about-container ul li {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .about-container ul li i {
+            margin-right: 10px;
+            color: #2575fc;
+        }
+
+        /* Footer Section */
+        .footer {
+            margin-top: 40px;
+            font-size: 1rem;
+            color: #fff;
+            font-weight: 400;
+            text-align: center;
+        }
+
+        /* Social Media Links */
+        .social-icons {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .social-icons a {
+            font-size: 2.5rem;
+            color: #fff;
+            margin: 0 18px;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            color: #2575fc;
+            transform: scale(1.15);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .menu {
+                display: none;
+            }
+
+            .menu-icon {
+                display: block;
+            }
+
+            .navbar.active .menu {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+                width: 100%;
+                background: rgba(0, 0, 0, 0.7);
+                padding: 20px;
+            }
+
+            .status-container .status-icon {
+                font-size: 100px;
+            }
+
+            .metrics-container {
+                padding: 20px;
+            }
+
+            .footer {
+                font-size: 0.9rem;
+            }
+
+            .social-icons a {
+                font-size: 2rem;
+                margin: 0 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="logo">KabayanX</div>
+        <div class="menu-icon" onclick="toggleMenu()">
+            <i class="fas fa-bars"></i>
+        </div>
+        <div class="menu">
+            <a href="#status">Status</a>
+            <a href="#metrics">Metrics</a>
+            <a href="#about">About</a>
+            <a href="#contact">Contact</a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h1>KabayanX Bot Status</h1>
+
+        <!-- Status Section -->
+        <div class="status-container" id="status">
+            <div class="status-icon online" id="statusIcon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="status-text online" id="statusText">
+                Online
+            </div>
+        </div>
+
+        <!-- Metrics Section -->
+        <div class="metrics-container" id="metrics">
+            <h3>Detailed Bot Metrics</h3>
+            <canvas id="metricsChart"></canvas>
+        </div>
+
+        <!-- About Section -->
+        <div class="about-container" id="about">
+            <h3>About KabayanX Bot</h3>
+            <p>The <strong>KabayanX Bot</strong> is designed to enhance your Discord server by automating many tedious tasks...</p>
+            <ul>
+                <li><i class="fas fa-bullhorn"></i> Automated Announcements</li>
+                <li><i class="fas fa-calendar-alt"></i> Event Scheduling</li>
+                <li><i class="fas fa-cogs"></i> Server Management</li>
+                <li><i class="fas fa-code"></i> Custom Commands</li>
+                <li><i class="fas fa-clock"></i> 24/7 Monitoring</li>
+            </ul>
+        </div>
+
+        <!-- Social Media Links -->
+        <div class="social-icons" id="contact">
+            <a href="https://web.facebook.com/itsmeS3th" target="_blank"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://discord.gg/aqqg7Swn4K" target="_blank"><i class="fab fa-discord"></i></a>
+        </div>
+
+        <!-- Footer Section -->
+        <div class="footer">
+            &copy; 2024 KabayanX. All rights reserved. | Developed by Luke Patterson
+        </div>
+    </div>
+
+    <script>
+        // Navbar Toggle for Mobile
+        function toggleMenu() {
+            const navbar = document.querySelector('.navbar');
+            navbar.classList.toggle('active');
+        }
+
+        // Chart.js Example Data and Configuration
+        const ctx = document.getElementById('metricsChart').getContext('2d');
+        const metricsChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'User Activity',
+                    data: [12, 19, 3, 5, 2, 3],
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderWidth: 2,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        enabled: true,
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            display: false,
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
